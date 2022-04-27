@@ -1,10 +1,13 @@
 package com.anshad.basestructure.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import com.anshad.basestructure.model.Action
 import com.anshad.basestructure.model.LoadingMessageData
 import com.anshad.basestructure.model.MessageData
@@ -15,6 +18,28 @@ abstract class BaseFragment<VM : BaseViewModel>(@LayoutRes layout: Int) : Fragme
     protected abstract val viewModel: VM
 
     private val activityViewModel: BaseActivityViewModel by activityViewModels()
+
+    var isPaused = false
+        private set
+
+    private var pendingNavigationActionId = 0
+    private var pendingNavigationActionBundle: Bundle? = null
+    private var pendingNavigateUp = false
+    private var pendingNavigationIntent: Intent? = null
+    private var pendingNavigationActivityClass: Class<*>? = null
+    private var pendingNavigationFinishCurrent = false
+    private var pendingNavDirections: NavDirections? = null
+
+    override fun onPause() {
+        super.onPause()
+        isPaused = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isPaused = false
+        continuePendingNavigation()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,6 +63,43 @@ abstract class BaseFragment<VM : BaseViewModel>(@LayoutRes layout: Int) : Fragme
             onActionPerformed(it)
         })
 
+        viewModel.navDirections.observe(viewLifecycleOwner, EventObserver {
+            onNavigateAction(it)
+        })
+
+        viewModel.navigate.observe(viewLifecycleOwner, EventObserver {
+            onNavigate(it.id, it.bundle)
+        })
+
+        viewModel.upNavigation.observe(viewLifecycleOwner, EventObserver {
+            onNavigateUp()
+        })
+
+    }
+
+    private fun continuePendingNavigation() {
+        when {
+            pendingNavigationActionId != 0 -> {
+                onNavigate(pendingNavigationActionId, pendingNavigationActionBundle)
+            }
+            pendingNavDirections != null -> {
+                onNavigateAction(pendingNavDirections!!)
+            }
+            pendingNavigateUp -> {
+                onNavigateUp()
+            }
+        }
+        resentPendingState()
+    }
+
+    private fun resentPendingState() {
+        pendingNavigationActionId = 0
+        pendingNavigationActionBundle = null
+        pendingNavigateUp = false
+        pendingNavigationIntent = null
+        pendingNavigationActivityClass = null
+        pendingNavigationFinishCurrent = false
+        pendingNavDirections = null
     }
 
     open fun onLoadingMessage(messageData: LoadingMessageData) {
@@ -53,5 +115,32 @@ abstract class BaseFragment<VM : BaseViewModel>(@LayoutRes layout: Int) : Fragme
     }
 
     open fun onActionPerformed(action: Action) {
+    }
+
+    open fun onNavigate(navigationActionId: Int, bundle: Bundle? = null) {
+        if (isPaused) {
+            pendingNavigationActionId = navigationActionId
+            pendingNavigationActionBundle = bundle
+            return
+        }
+        findNavController().navigate(navigationActionId, bundle)
+    }
+
+    open fun onNavigateAction(navigationActionId: NavDirections) {
+        if (isPaused) {
+            pendingNavDirections = navigationActionId
+            return
+        }
+        findNavController().navigate(navigationActionId)
+    }
+
+    open fun onNavigateUp() {
+        if (isPaused) {
+            pendingNavigateUp = true
+            return
+        }
+        if (!findNavController().navigateUp()) {
+            activity?.onBackPressed()
+        }
     }
 }

@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 32
@@ -30,6 +31,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
@@ -43,4 +47,25 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'androidx.activity:activity-ktx:1.4.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
+
+    // RxJava
+    implementation "io.reactivex.rxjava3:rxjava:$rxjava"
+    //RxKotline
+    implementation "io.reactivex.rxjava3:rxkotlin:$rxkotlin"
+    // RxAndroid
+    implementation "io.reactivex.rxjava3:rxandroid:$rxandroid"
+
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.google.code.gson:gson:$gson"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$logging_intercepto"
+    //RxJava retrofit
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit"
+
+    implementation "androidx.preference:preference-ktx:$preference_version"
+
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
 }

@@ -5,6 +5,8 @@ import android.os.PersistableBundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.anshad.basestructure.constants.Actions
+import com.anshad.basestructure.ktx.AppCompatActivityKtx.enterFullScreen
+import com.anshad.basestructure.ktx.AppCompatActivityKtx.exitFullScreen
 import com.anshad.basestructure.model.Action
 import com.anshad.basestructure.model.LoadingMessageData
 import com.anshad.basestructure.model.MessageData
@@ -27,13 +29,17 @@ abstract class BaseActivity: AppCompatActivity() {
         })
     }
 
+    fun actionPerformed(action: Action) {
+        viewModel.actionPerformed(action)
+    }
+
     open fun onPerformAction(action: Action) {
         when (action.task.action) {
             Actions.ENTER_FULLSCREEN -> {
-               // enterFullScreen(true)
+               enterFullScreen(true)
             }
             Actions.EXIT_FULLSCREEN -> {
-                //exitFullScreen()
+                exitFullScreen()
             }
             Actions.ACTION_LOGOUT -> {
                 onLogout()

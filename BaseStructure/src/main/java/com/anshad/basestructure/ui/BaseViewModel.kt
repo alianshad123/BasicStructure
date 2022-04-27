@@ -4,11 +4,9 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavDirections
 import com.anshad.basestructure.R
-import com.anshad.basestructure.model.Action
-import com.anshad.basestructure.model.Event
-import com.anshad.basestructure.model.LoadingMessageData
-import com.anshad.basestructure.model.MessageData
+import com.anshad.basestructure.model.*
 
 
 abstract class BaseViewModel : ViewModel() {
@@ -21,6 +19,15 @@ abstract class BaseViewModel : ViewModel() {
 
     private val loadingLiveData = MutableLiveData<Event<LoadingMessageData>>()
     val loading: LiveData<Event<LoadingMessageData>> = loadingLiveData
+
+    private val navDirectionsLiveData = MutableLiveData<Event<NavDirections>>()
+    val navDirections: LiveData<Event<NavDirections>> = navDirectionsLiveData
+
+    private val navigateLiveData = MutableLiveData<Event<NavigationData>>()
+    val navigate: LiveData<Event<NavigationData>> = navigateLiveData
+
+    private val upNavigationLiveData = MutableLiveData<Event<Boolean>>()
+    val upNavigation: LiveData<Event<Boolean>> = upNavigationLiveData
 
 
     fun showInfoMessage(message: MessageData) {
