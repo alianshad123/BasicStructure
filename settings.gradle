@@ -1,0 +1,3 @@
+rootProject.name = "BasicStructure"
+include ':app'
+include ':BaseStructure'
