@@ -16,4 +16,5 @@ class SplashFragment : BaseFragment<SplashViewmodel>(R.layout.fragment_splash) {
     }
 
 
+
 }

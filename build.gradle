@@ -33,6 +33,7 @@ ext{
     gson = "2.8.6"
     logging_intercepto = "4.6.0"
     preference_version = "1.2.0"
+    multidex = "2.0.1"
 
 }
 

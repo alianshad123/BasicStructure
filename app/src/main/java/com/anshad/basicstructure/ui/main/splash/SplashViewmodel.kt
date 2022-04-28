@@ -14,7 +14,7 @@ class SplashViewmodel:BaseViewModel() {
     private fun navigateToMainScreen() {
         Handler().postDelayed(
             {
-
+                navigate(R.id.action_splashFragment_to_dashboardFragment)
         }, 3000)
 
     }
