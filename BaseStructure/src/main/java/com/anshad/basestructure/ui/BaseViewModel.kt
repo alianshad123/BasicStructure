@@ -1,5 +1,7 @@
 package com.anshad.basestructure.ui
 
+import android.os.Bundle
+import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,6 +30,18 @@ abstract class BaseViewModel : ViewModel() {
 
     private val upNavigationLiveData = MutableLiveData<Event<Boolean>>()
     val upNavigation: LiveData<Event<Boolean>> = upNavigationLiveData
+
+    fun navigate(@IdRes id: Int, bundle: Bundle? = null) {
+        navigateLiveData.postValue(Event(NavigationData(id, bundle)))
+    }
+
+    fun navigateUp() {
+        upNavigationLiveData.postValue(Event(true))
+    }
+
+    fun navigate(navigationActionId: NavDirections) {
+        navDirectionsLiveData.postValue(Event(navigationActionId))
+    }
 
 
     fun showInfoMessage(message: MessageData) {
