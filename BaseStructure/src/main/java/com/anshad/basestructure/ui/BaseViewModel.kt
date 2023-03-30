@@ -49,7 +49,7 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     open fun showLoading(message: LoadingMessageData) {
-        loadingLiveData.value = Event(message)
+        loadingLiveData.postValue(Event(message))
     }
 
     fun performAction(action: Action) {
